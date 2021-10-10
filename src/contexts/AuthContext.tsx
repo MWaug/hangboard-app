@@ -1,42 +1,64 @@
 import React, { useContext, useState, useEffect } from "react"
 import { auth } from "../firebase"
+import { User as FirebaseUser, UserCredential } from "firebase/auth"
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, updateEmail, updatePassword } from "firebase/auth"
 
-const AuthContext = React.createContext()
+type AuthContextValues = {
+    currentUser: FirebaseUser | null,
+    login: (email: string, password: string) => Promise<UserCredential>,
+    signup: (email: string, password: string) => Promise<UserCredential>,
+    logout: () => Promise<void>,
+    resetPassword: (email: string) => Promise<void>,
+    updateAppEmail: (email: string) => Promise<void>,
+    updateAppPassword: (password: string) => Promise<void>
+}
+
+const AuthContext = React.createContext<AuthContextValues | null>(null)
 
 export function useAuth() {
     return useContext(AuthContext)
 }
 
-export function AuthProvider({ children }) {
-    const [currentUser, setCurrentUser] = useState()
+type AuthProviderProps = {
+    children: any
+}
+
+export function AuthProvider({ children }: AuthProviderProps) {
+    const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null)
     const [loading, setLoading] = useState(true)
 
-    function signup(email, password) {
-        return auth.createUserWithEmailAndPassword(email, password)
+    function signup(email: string, password: string) {
+        return createUserWithEmailAndPassword(auth, email, password)
     }
 
-    function login(email, password) {
-        return auth.signInWithEmailAndPassword(email, password)
+    function login(email: string, password: string) {
+        return signInWithEmailAndPassword(auth, email, password)
     }
 
     function logout() {
-        return auth.signOut()
+        return signOut(auth)
     }
 
-    function resetPassword(email) {
-        return auth.sendPasswordResetEmail(email)
+    function resetPassword(email: string) {
+        return sendPasswordResetEmail(auth, email)
     }
 
-    function updateEmail(email) {
-        return currentUser.updateEmail(email)
+    function updateAppEmail(email: string): Promise<void> {
+        if (currentUser == null) {
+            return Promise.reject(new Error('Could not update email'))
+        }
+        return updateEmail(currentUser, email)
     }
 
-    function updatePassword(password) {
-        return currentUser.updatePassword(password)
+    function updateAppPassword(password: string): Promise<void> {
+        if (currentUser == null) {
+            return Promise.reject(new Error('Could not update password'))
+        }
+        return updatePassword(currentUser, password)
     }
 
     useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(user => {
+        const unsubscribe = auth.onAuthStateChanged((user: FirebaseUser | null) => {
             setCurrentUser(user)
             setLoading(false)
         })
@@ -50,8 +72,8 @@ export function AuthProvider({ children }) {
         signup,
         logout,
         resetPassword,
-        updateEmail,
-        updatePassword
+        updateAppEmail,
+        updateAppPassword
     }
 
     return (
