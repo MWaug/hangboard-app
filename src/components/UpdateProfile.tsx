@@ -4,17 +4,17 @@ import { useAuth } from "../contexts/AuthContext"
 import { Link, useHistory } from "react-router-dom"
 
 export default function UpdateProfile() {
-    const emailRef = useRef()
-    const passwordRef = useRef()
-    const passwordConfirmRef = useRef()
-    const { currentUser, updatePassword, updateEmail } = useAuth()
+    const emailRef = useRef<HTMLInputElement>(null)
+    const passwordRef = useRef<HTMLInputElement>(null)
+    const passwordConfirmRef = useRef<HTMLInputElement>(null)
+    const { currentUser, updateAppPassword, updateAppEmail } = useAuth()!
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
     const history = useHistory()
 
-    function handleSubmit(e) {
+    function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
-        if (passwordRef.current.value !== passwordConfirmRef.current.value) {
+        if (passwordRef!.current!.value !== passwordConfirmRef!.current!.value) {
             return setError("Passwords do not match")
         }
 
@@ -22,11 +22,11 @@ export default function UpdateProfile() {
         setLoading(true)
         setError("")
 
-        if (emailRef.current.value !== currentUser.email) {
-            promises.push(updateEmail(emailRef.current.value))
+        if (emailRef!.current!.value !== currentUser!.email) {
+            promises.push(updateAppEmail(emailRef!.current!.value))
         }
-        if (passwordRef.current.value) {
-            promises.push(updatePassword(passwordRef.current.value))
+        if (passwordRef!.current!.value) {
+            promises.push(updateAppPassword(passwordRef!.current!.value))
         }
 
         Promise.all(promises)
@@ -54,7 +54,7 @@ export default function UpdateProfile() {
                                 type="email"
                                 ref={emailRef}
                                 required
-                                defaultValue={currentUser.email}
+                                defaultValue={currentUser!.email!}
                             />
                         </Form.Group>
                         <Form.Group id="password">
