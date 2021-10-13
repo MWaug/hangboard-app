@@ -1,16 +1,14 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Card, Button, Alert, ListGroup } from "react-bootstrap"
 import { useAuth } from "../contexts/AuthContext"
 import { Link, useHistory } from "react-router-dom"
 import { Line } from "react-chartjs-2"
+import { hangboardConnectStream } from "../features/mqtt/hangboardMQTT"
 
 export default function HangboardWave() {
     const [error, setError] = useState("")
     const { currentUser, logout } = useAuth()!
     const history = useHistory()
-    // const mqttConnect = (host, mqttOption) => {
-
-    // };
 
     async function handleLogout() {
         setError("")
@@ -49,8 +47,13 @@ export default function HangboardWave() {
         }
     }
 
-    // useEffect(() => {
-    // }, [])
+    const loadMore = () => {}
+
+    useEffect(() => {
+        hangboardConnectStream((topic: string, message: string, packet: any)=>{
+            console.log("react message from mqtt message")
+        })
+    }, [])
 
     return (
         <>
@@ -65,6 +68,9 @@ export default function HangboardWave() {
                             <ListGroup.Item>Hang 2</ListGroup.Item>
                         </ListGroup>
                     </div>
+                    <Button variant="link" onClick={loadMore}>
+                        Load More
+                    </Button>
                 </Card.Body>
             </Card>
             <div className="w-100 text-center mt-2">
