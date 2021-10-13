@@ -7,6 +7,16 @@ const client = mqtt.connect(`ws://${mqttHostname}/ws`, {
   password: process.env.REACT_APP_HANGBOARD_MQTT_PASSWD,
 });
 
+export interface HangboardMessage {
+  t: [number];
+  v: [number];
+}
+
+export const parseHangboardMessage = (message: string): HangboardMessage => {
+  let obj: HangboardMessage = JSON.parse(message);
+  return obj;
+};
+
 export const hangboardConnectStream = (
   onMessage: (topic: string, message: string, packet: any) => void
 ): MqttClient => {
