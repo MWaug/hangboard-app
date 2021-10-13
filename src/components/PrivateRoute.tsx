@@ -1,6 +1,6 @@
-import React from "react"
-import { Route, Redirect, RouteProps } from "react-router-dom"
-import { useAuth } from "../contexts/AuthContext"
+import React from "react";
+import { Route, Redirect, RouteProps } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 // export default function PrivateRoute({ component: Component, ...rest }) {
 //     const { currentUser } = useAuth()!
@@ -16,14 +16,17 @@ import { useAuth } from "../contexts/AuthContext"
 // }
 
 export type ProtectedRouteProps = {
-    authenticationPath: string;
+  authenticationPath: string;
 } & RouteProps;
 
-export default function ProtectedRoute({ authenticationPath, ...routeProps }: ProtectedRouteProps) {
-    const authArgs = useAuth()
-    if (authArgs != null && authArgs.currentUser != null) {
-        return <Route {...routeProps} />;
-    } else {
-        return <Redirect to={{ pathname: authenticationPath }} />;
-    }
-};
+export default function ProtectedRoute({
+  authenticationPath,
+  ...routeProps
+}: ProtectedRouteProps) {
+  const authArgs = useAuth();
+  if (authArgs != null && authArgs.currentUser != null) {
+    return <Route {...routeProps} />;
+  } else {
+    return <Redirect to={{ pathname: authenticationPath }} />;
+  }
+}
