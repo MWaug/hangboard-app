@@ -1,86 +1,83 @@
-import { useState, useEffect } from "react";
-import { Line } from "react-chartjs-2";
+import { useEffect, useRef } from "react";
 import {
   hangboardConnectStream,
   parseHangboardMessage,
 } from "../features/mqtt/hangboardMQTT";
-import { ChartData } from "chart.js";
+import { ChartData, Chart } from "chart.js";
+import "chartjs-adapter-luxon";
+import ChartStreaming from "chartjs-plugin-streaming";
 
-const getDefaultChartData = (): ChartData => {
-  const newChartData = {
-    labels: [],
-    datasets: [
-      {
-        label: "Hang Force (lbs)",
-        borderColor: "rgb(255, 99, 132)",
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
-        lineTension: 0,
-        borderDash: [8, 4],
-        data: [],
-      },
-    ],
-  };
-  return newChartData;
-};
+Chart.register(ChartStreaming);
 
 export default function HangboardLiveWave() {
-  const [chartValues, setChartValues] = useState<number[]>([]);
-  const [chartTimes, setChartTimes] = useState<number[]>([]);
-  var times: number[] = [];
-  var values: number[] = [];
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const MAX_VIEW_LENGTH = 100;
-  const options = {
-    scales: {
-      x: {},
-      y: {
-        title: {
-          display: true,
-          text: "Weight (lbs)",
-        },
-      },
-    },
-  };
+  const addPlotData = (
+    t: number[],
+    v: number[],
+    chart: Chart<"line", { x: Date; y: number }[], any>
+  ): void => {
+    const times = t.map((n: number) => {
+      return new Date(n);
+    });
 
-  const generateChartData = (t: number[], v: number[]): ChartData => {
-    const d = getDefaultChartData();
-    // Add new values to the chart data fields
-    d.datasets[0].data = v;
-    d.labels = t;
-    return d;
-  };
-
-  const addPlotData = (t: number[], v: number[]): void => {
-    times = times.concat(t);
-    values = values.concat(v);
-    // Limit the maximum length of the chartData
-    if (times.length > MAX_VIEW_LENGTH) {
-      times = times.slice(times.length - MAX_VIEW_LENGTH - 1);
-    }
-    if (values.length > MAX_VIEW_LENGTH) {
-      values = values.slice(values.length - MAX_VIEW_LENGTH - 1);
-    }
-    console.log("old chart data " + values);
-    console.log("times " + times);
-    console.log("values " + values);
-    setChartTimes(times);
-    setChartValues(values);
-    console.log("after set - old chart data " + values);
+    const zip = times.map((tval, i): [Date, number] => [tval, v[i]]);
+    const chartData: { x: Date; y: number }[] = zip.map((pair) => {
+      return { x: pair[0], y: pair[1] };
+    });
+    chartData.forEach((entry) => {
+      chart.data.datasets[0].data.push(entry);
+    });
   };
 
   useEffect(() => {
-    hangboardConnectStream((topic: string, message: string, packet: any) => {
-      const hdata = parseHangboardMessage(message);
-      addPlotData(hdata.t, hdata.v);
-    });
+    const ctx: CanvasRenderingContext2D | null = canvasRef.current
+      ? canvasRef.current.getContext("2d")
+      : null;
+    if (ctx) {
+      const chart = new Chart(ctx, {
+        type: "line", // 'line', 'bar', 'bubble' and 'scatter' types are supported
+        data: {
+          datasets: [
+            {
+              label: "Hang Force (lbs)",
+              data: [], // empty at the beginning
+            },
+          ],
+        },
+        options: {
+          scales: {
+            y: {
+              title: {
+                display: true,
+                text: "Weight(lbs)",
+              },
+            },
+            x: {
+              type: "realtime", // x axis will auto-scroll from right to left
+              realtime: {
+                // per-axis options
+                duration: 20000, // data in the past 20000 ms will be displayed
+                refresh: 200, // onRefresh callback will be called every 1000 ms
+                delay: 600, // delay of 1000 ms, so upcoming values are known before plotting a line
+                pause: false, // chart is not paused
+                ttl: undefined, // data will be automatically deleted as it disappears off the chart
+                frameRate: 20, // data points are drawn 30 times every second
+              },
+            },
+          },
+        },
+      });
+      hangboardConnectStream((topic: string, message: string, packet: any) => {
+        const hdata = parseHangboardMessage(message);
+        addPlotData(hdata.t, hdata.v, chart);
+      });
+    }
   }, []);
 
   return (
     <>
-      <Line
-        data={generateChartData(chartTimes, chartValues)}
-        options={options}
-      />
+      <canvas id="myChart" width="400" height="400" ref={canvasRef}></canvas>
     </>
   );
 }

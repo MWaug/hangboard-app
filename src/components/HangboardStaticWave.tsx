@@ -10,10 +10,7 @@ const getDefaultChartData = (): ChartData => {
     datasets: [
       {
         label: "Hang Force (lbs)",
-        borderColor: "rgb(255, 99, 132)",
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
         lineTension: 0,
-        borderDash: [8, 4],
         data: [],
       },
     ],
@@ -30,7 +27,12 @@ export const HangboardStaticWave: FunctionComponent<StaticWaveProps> = ({
 }: StaticWaveProps) => {
   const options = {
     scales: {
-      x: {},
+      x: {
+        title: {
+          display: true,
+          text: "Seconds",
+        },
+      },
       y: {
         title: {
           display: true,

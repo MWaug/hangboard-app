@@ -15,7 +15,7 @@ function App() {
       className="d-flex alight-items-center justify-content-center"
       style={{ minHeight: "100vh" }}
     >
-      <div className="w-100" style={{ maxWidth: "400px" }}>
+      <div className="w-100" style={{ maxWidth: "600px" }}>
         <Router>
           <AuthProvider>
             <Switch>

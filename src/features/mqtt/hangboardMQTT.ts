@@ -1,6 +1,6 @@
 import mqtt, { MqttClient } from "mqtt";
 
-const mqttHostname = "192.168.68.107:9001";
+const mqttHostname = process.env.REACT_APP_HANGBOARD_MQTT_HOST;
 const client = mqtt.connect(`ws://${mqttHostname}/ws`, {
   // clientId: "index",
   username: process.env.REACT_APP_HANGBOARD_MQTT_USER,

@@ -47,7 +47,7 @@ export const onHangEvents = (
 ): (() => void) => {
   const q = query(
     hangEventsCollection,
-    orderBy("startTime"),
+    orderBy("startTime", "desc"),
     limit(eventLimit)
   );
   const cancelSnapshotListen = onSnapshot(q, (querySnapshot) => {
