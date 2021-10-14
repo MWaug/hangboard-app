@@ -6,23 +6,24 @@ import {
 } from "../features/mqtt/hangboardMQTT";
 import { ChartData } from "chart.js";
 
-export default function HangboardLiveWave() {
-  const getDefaultChartData = (): ChartData => {
-    const newChartData = {
-      labels: [],
-      datasets: [
-        {
-          label: "Hang Force (lbs)",
-          borderColor: "rgb(255, 99, 132)",
-          backgroundColor: "rgba(255, 99, 132, 0.5)",
-          lineTension: 0,
-          borderDash: [8, 4],
-          data: [],
-        },
-      ],
-    };
-    return newChartData;
+const getDefaultChartData = (): ChartData => {
+  const newChartData = {
+    labels: [],
+    datasets: [
+      {
+        label: "Hang Force (lbs)",
+        borderColor: "rgb(255, 99, 132)",
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
+        lineTension: 0,
+        borderDash: [8, 4],
+        data: [],
+      },
+    ],
   };
+  return newChartData;
+};
+
+export default function HangboardLiveWave() {
   const [chartValues, setChartValues] = useState<number[]>([]);
   const [chartTimes, setChartTimes] = useState<number[]>([]);
   var times: number[] = [];

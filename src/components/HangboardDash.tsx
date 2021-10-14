@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
-import { Card, Button, Alert } from "react-bootstrap";
+import { useState } from "react";
+import { Card, Button } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
 import HangList from "./HangList";
-import HangboardLiveWave from "./HangboardLiveWave";
+// import HangboardLiveWave from "./HangboardLiveWave";
 
 export default function HangboardDash() {
   const [error, setError] = useState("");
