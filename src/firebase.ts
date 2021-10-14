@@ -1,6 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import "firebase/auth";
+import { collection, getFirestore, DocumentData } from "@firebase/firestore";
+import { HangEvent } from "./features/hangboard/hangInterfaces";
 
 const app = initializeApp({
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -11,5 +13,22 @@ const app = initializeApp({
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
 });
 
+export const db = getFirestore();
 export const auth = getAuth(app);
+export const hangEventsCollection = collection(db, "hang_events");
 export default app;
+
+export const hangEventFromFirestore = (doc: DocumentData): HangEvent => {
+  const newHangEvent: HangEvent = {
+    aveWeight: doc.aveWeight,
+    device: doc.device,
+    endTime: doc.endTime.toDate(),
+    maxWeight: doc.maxWeight,
+    recvTime: doc.recvTime,
+    startTime: doc.startTime,
+    user: doc.user,
+    t: doc.t,
+    weight: doc.weight,
+  };
+  return newHangEvent;
+};

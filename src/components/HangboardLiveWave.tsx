@@ -1,7 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { Card, Button, Alert, ListGroup } from "react-bootstrap";
-import { useAuth } from "../contexts/AuthContext";
-import { Link, useHistory } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import {
   hangboardConnectStream,
@@ -9,7 +6,7 @@ import {
 } from "../features/mqtt/hangboardMQTT";
 import { ChartData } from "chart.js";
 
-export default function HangboardWave() {
+export default function HangboardLiveWave() {
   const getDefaultChartData = (): ChartData => {
     const newChartData = {
       labels: [],
@@ -26,27 +23,12 @@ export default function HangboardWave() {
     };
     return newChartData;
   };
-  const [error, setError] = useState("");
   const [chartValues, setChartValues] = useState<number[]>([]);
   const [chartTimes, setChartTimes] = useState<number[]>([]);
-  const { currentUser, logout } = useAuth()!;
-  const history = useHistory();
   var times: number[] = [];
   var values: number[] = [];
 
   const MAX_VIEW_LENGTH = 100;
-
-  async function handleLogout() {
-    setError("");
-
-    try {
-      await logout();
-      history.push("/login");
-    } catch {
-      setError("Failed to log out");
-    }
-  }
-
   const options = {
     scales: {
       x: {},
@@ -58,8 +40,6 @@ export default function HangboardWave() {
       },
     },
   };
-
-  const loadMore = () => {};
 
   const generateChartData = (t: number[], v: number[]): ChartData => {
     const d = getDefaultChartData();
@@ -96,30 +76,10 @@ export default function HangboardWave() {
 
   return (
     <>
-      <Card>
-        <Card.Body>
-          <h2 className="text-center mb-4">Hangboard Waveform</h2>
-          {error && <Alert variant="danger">{error}</Alert>}
-          <Line
-            data={generateChartData(chartTimes, chartValues)}
-            options={options}
-          />
-          <div className="mt-5">
-            <ListGroup>
-              <ListGroup.Item>Hang 1</ListGroup.Item>
-              <ListGroup.Item>Hang 2</ListGroup.Item>
-            </ListGroup>
-          </div>
-          <Button variant="link" onClick={loadMore}>
-            Load More
-          </Button>
-        </Card.Body>
-      </Card>
-      <div className="w-100 text-center mt-2">
-        <Button variant="link" onClick={handleLogout}>
-          Log Out
-        </Button>
-      </div>
+      <Line
+        data={generateChartData(chartTimes, chartValues)}
+        options={options}
+      />
     </>
   );
 }

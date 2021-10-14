@@ -6,7 +6,7 @@ import Login from "./Login";
 import PrivateRoute from "./PrivateRoute";
 import UpdateProfile from "./UpdateProfile";
 import ForgotPassword from "./ForgotPassword";
-import HangboardWave from "./HangboardWave";
+import HangboardDash from "./HangboardDash";
 import Signup from "./Signup";
 
 function App() {
@@ -32,7 +32,7 @@ function App() {
               />
               <PrivateRoute
                 path="/hangboard-wave"
-                component={HangboardWave}
+                component={HangboardDash}
                 authenticationPath="/login"
               />
               <Route path="/signup" component={Signup} />
