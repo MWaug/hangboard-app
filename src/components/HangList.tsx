@@ -1,7 +1,6 @@
 import { ListGroup, ProgressBar } from "react-bootstrap";
 import { useEffect, useState } from "react";
-import { hangEventFromFirestore, hangEventsCollection } from "../firebase";
-import { onSnapshot } from "@firebase/firestore";
+import { onHangEvents } from "../firebase";
 import { HangEvent } from "../features/hangboard/hangInterfaces";
 import { HangListItem } from "./HangListItem";
 
@@ -9,20 +8,19 @@ export default function HangList() {
   const [hangListData, setHangListData] = useState<HangEvent[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const getHangEvents = () => {
+  const LIST_LIMIT = 50;
+
+  const listenToHangEvents = () => {
     setLoading(true);
-    onSnapshot(hangEventsCollection, (querySnapshot) => {
-      const items: HangEvent[] = [];
-      querySnapshot.forEach((doc) => {
-        items.push(hangEventFromFirestore(doc.data()));
-      });
-      setHangListData(items);
-      setLoading(false);
-    });
+    const cancelSnapshotListen = onHangEvents((hangEvents: HangEvent[]) => {
+      setHangListData(hangEvents);
+    }, LIST_LIMIT);
+    setLoading(false);
+    return cancelSnapshotListen;
   };
 
   useEffect(() => {
-    getHangEvents();
+    listenToHangEvents();
   }, []);
   return (
     <>

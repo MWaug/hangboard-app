@@ -1,7 +1,15 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import "firebase/auth";
-import { collection, getFirestore, DocumentData } from "@firebase/firestore";
+import {
+  onSnapshot,
+  collection,
+  getFirestore,
+  DocumentData,
+  query,
+  orderBy,
+  limit,
+} from "@firebase/firestore";
 import { HangEvent } from "./features/hangboard/hangInterfaces";
 
 const app = initializeApp({
@@ -31,4 +39,26 @@ export const hangEventFromFirestore = (doc: DocumentData): HangEvent => {
     weight: doc.weight,
   };
   return newHangEvent;
+};
+
+export const onHangEvents = (
+  action: (he: HangEvent[]) => void,
+  eventLimit: number
+): (() => void) => {
+  const q = query(
+    hangEventsCollection,
+    orderBy("startTime"),
+    limit(eventLimit)
+  );
+  const cancelSnapshotListen = onSnapshot(q, (querySnapshot) => {
+    const items: HangEvent[] = [];
+    querySnapshot.forEach((doc) => {
+      items.push(hangEventFromFirestore(doc.data()));
+    });
+    action(items);
+  });
+  if (cancelSnapshotListen) {
+    return cancelSnapshotListen;
+  }
+  return () => {};
 };
