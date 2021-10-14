@@ -11,5 +11,5 @@ export interface HangEvent {
 }
 
 export const getHangDuration = (hangEvent: HangEvent): number => {
-  return 5;
+  return hangEvent.endTime.getSeconds() - hangEvent.startTime.getSeconds();
 };

@@ -26,6 +26,7 @@ const HangListItem: FunctionComponent<HangListItemProps> = ({
         <ListGroup.Item key={3}>
           Time: {hangEvent.endTime.toLocaleString()}
         </ListGroup.Item>
+        <ListGroup.Item key={4}>User: {hangEvent.user}</ListGroup.Item>
       </ListGroup>
     </>
   );
