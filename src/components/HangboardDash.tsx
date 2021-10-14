@@ -26,10 +26,7 @@ export default function HangboardDash() {
       <Card>
         <Card.Body>
           <h2 className="text-center mb-4">Hangboard Dashboard</h2>
-          {/* <HangboardLiveWave /> */}
-          <div className="mt-5">
-            <HangList />
-          </div>
+          <HangList />
         </Card.Body>
       </Card>
       <div className="w-100 text-center mt-2">
