@@ -1,4 +1,40 @@
+## About
+
+This web app interfaces with the HangOnIt prototype hangboard.
+It allows users to track workouts and view hang force in realtime.
+
+The full system includes a modified hangboard, custom PCB, web application, backend server, and MQTT broker. All components are open source.
+
+<center><img src="./doc/HangboardSystem.png" alt="live_view"/></center>
+
+The components listed in the image above are linked below.
+
+- [PCB](https://oshwlab.com/mwalk/hangboard)
+- [Web App](https://github.com/MWaug/hangboard-app)
+- [Backend and MQTT](https://github.com/MWaug/hangboard-server)
+- [Firmware](https://github.com/MWaug/hangboard)
+
+## React Documentation
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
+
+## Setup Development Environment
+
+To get started developing the app, several environment variables must be set.
+
+Create a file called .env.local in the root directory of the app and fill in the following environment variables:
+
+```
+REACT_APP_FIREBASE_API_KEY=AI...
+REACT_APP_FIREBASE_AUTH_DOMAIN=...
+REACT_APP_FIREBASE_PROJECT_ID=...
+REACT_APP_FIREBASE_STORAGE_BUCKET=...
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=...
+REACT_APP_FIREBASE_APP_ID=...
+REACT_APP_HANGBOARD_MQTT_USER=...
+REACT_APP_HANGBOARD_MQTT_PASSWD=...
+REACT_APP_HANGBOARD_MQTT_HOST=... # Include port number (e.g. 127.0.0.1:9001)
+```
 
 ## Available Scripts
 
