@@ -9,7 +9,7 @@ The full system includes a modified hangboard, custom PCB, web application, back
 
 The components listed in the image above are linked below.
 
-- [PCB](https://oshwlab.com/mwalk/hangboard)
+- [PCB](https://oshwlab.com/mwalk/hangboard_copy)
 - [Web App](https://github.com/MWaug/hangboard-app)
 - [Backend and MQTT](https://github.com/MWaug/hangboard-server)
 - [Firmware](https://github.com/MWaug/hangboard)
