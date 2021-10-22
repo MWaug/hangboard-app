@@ -1,15 +1,15 @@
 export interface HangEvent {
   aveWeight: number;
   device: string;
-  endTime: Date;
+  endTimeMs: number;
   maxWeight: number;
   recvTime: Date;
-  startTime: Date;
+  startTimeMs: number;
   user: string;
-  t: number[];
+  times: number[];
   weight: number[];
 }
 
-export const getHangDuration = (hangEvent: HangEvent): number => {
-  return hangEvent.endTime.getSeconds() - hangEvent.startTime.getSeconds();
+export const getHangDurationSec = (hangEvent: HangEvent): number => {
+  return (hangEvent.endTimeMs - hangEvent.startTimeMs) / 1000;
 };

@@ -1,8 +1,5 @@
 import { useEffect, useRef } from "react";
-import {
-  hangboardConnectStream,
-  parseHangboardMessage,
-} from "../features/mqtt/hangboardMQTT";
+import { hangboardConnectStream, parseHangboardMessage } from "../features/mqtt/hangboardMQTT";
 import { ChartData, Chart } from "chart.js";
 import "chartjs-adapter-luxon";
 import ChartStreaming from "chartjs-plugin-streaming";
@@ -50,7 +47,7 @@ export default function HangboardLiveWave() {
             y: {
               title: {
                 display: true,
-                text: "Weight(lbs)",
+                text: "Weight (lbs)",
               },
             },
             x: {

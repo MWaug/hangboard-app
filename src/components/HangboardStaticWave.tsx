@@ -1,7 +1,6 @@
-import { useState, useEffect, FunctionComponent } from "react";
+import { FunctionComponent } from "react";
 import { Line } from "react-chartjs-2";
 import { ChartData } from "chart.js";
-import { onHangEvents } from "../firebase";
 import { HangEvent } from "../features/hangboard/hangInterfaces";
 
 const getDefaultChartData = (): ChartData => {
@@ -46,17 +45,11 @@ export const HangboardStaticWave: FunctionComponent<StaticWaveProps> = ({
     const d = getDefaultChartData();
     // Add new values to the chart data fields
     d.datasets[0].data = he.weight;
-    d.labels = he.t.map((t) => {
-      return t - he.t[0];
+    d.labels = he.times.map((t) => {
+      return t - he.times[0];
     });
     return d;
   };
 
-  return (
-    <>
-      {hangEvent && (
-        <Line data={generateChartData(hangEvent)} options={options} />
-      )}
-    </>
-  );
+  return <>{hangEvent && <Line data={generateChartData(hangEvent)} options={options} />}</>;
 };

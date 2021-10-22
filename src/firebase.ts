@@ -30,12 +30,12 @@ export const hangEventFromFirestore = (doc: DocumentData): HangEvent => {
   const newHangEvent: HangEvent = {
     aveWeight: doc.aveWeight,
     device: doc.device,
-    endTime: doc.endTime.toDate(),
+    endTimeMs: doc.endTime,
     maxWeight: doc.maxWeight,
     recvTime: doc.recvTime.toDate(),
-    startTime: doc.startTime.toDate(),
+    startTimeMs: doc.startTime,
     user: doc.user,
-    t: doc.t,
+    times: doc.times,
     weight: doc.weight,
   };
   return newHangEvent;
@@ -45,11 +45,7 @@ export const onHangEvents = (
   action: (he: HangEvent[]) => void,
   eventLimit: number
 ): (() => void) => {
-  const q = query(
-    hangEventsCollection,
-    orderBy("startTime", "desc"),
-    limit(eventLimit)
-  );
+  const q = query(hangEventsCollection, orderBy("startTime", "desc"), limit(eventLimit));
   const cancelSnapshotListen = onSnapshot(q, (querySnapshot) => {
     const items: HangEvent[] = [];
     querySnapshot.forEach((doc) => {
