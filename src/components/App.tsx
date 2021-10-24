@@ -7,6 +7,7 @@ import PrivateRoute from "./PrivateRoute";
 import UpdateProfile from "./UpdateProfile";
 import ForgotPassword from "./ForgotPassword";
 import HangboardDash from "./HangboardDash";
+import { HangHistory } from "./HangHistory";
 import Signup from "./Signup";
 
 function App() {
@@ -19,12 +20,7 @@ function App() {
         <Router>
           <AuthProvider>
             <Switch>
-              <PrivateRoute
-                exact
-                path="/"
-                component={Dashboard}
-                authenticationPath="/login"
-              />
+              <PrivateRoute exact path="/" component={Dashboard} authenticationPath="/login" />
               <PrivateRoute
                 path="/update-profile"
                 component={UpdateProfile}
@@ -33,6 +29,11 @@ function App() {
               <PrivateRoute
                 path="/hangboard-wave"
                 component={HangboardDash}
+                authenticationPath="/login"
+              />
+              <PrivateRoute
+                path="/hangboard-history"
+                component={HangHistory}
                 authenticationPath="/login"
               />
               <Route path="/signup" component={Signup} />

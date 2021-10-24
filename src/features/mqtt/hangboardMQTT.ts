@@ -28,8 +28,6 @@ export const hangboardConnectStream = (
     console.log("connected to MQTT port");
   });
   client.on("message", (topic: string, message: string, packet: any) => {
-    console.log("message is " + packet.payload.toString("utf-8"));
-    console.log("topic is " + topic);
     onMessage(topic, message, packet);
   });
   client.subscribe("testtopic", { qos: 1 });
