@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { hangboardConnectStream, parseHangboardMessage } from "../features/mqtt/hangboardMQTT";
-import { ChartData, Chart } from "chart.js";
+import { Chart } from "chart.js";
 import "chartjs-adapter-luxon";
 import ChartStreaming from "chartjs-plugin-streaming";
 

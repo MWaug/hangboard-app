@@ -1,5 +1,5 @@
 import { ListGroup, ProgressBar } from "react-bootstrap";
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useEffect } from "react";
 import { HangEvent } from "../features/hangboard/hangInterfaces";
 import { HangListItem } from "./HangListItem";
 
@@ -14,8 +14,6 @@ export const HangList: FunctionComponent<HangListProps> = ({
   onListClick,
   loading,
 }: HangListProps) => {
-  const [selectedHang, setSelectedHang] = useState<HangEvent>();
-
   useEffect(() => {}, []);
   return (
     <>
